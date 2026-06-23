@@ -378,7 +378,7 @@ function StatCard({
   );
 }
 
-function ItemCard({ item }: { item: Item }) {
+function ItemCard({ item, canManage }: { item: Item; canManage: boolean }) {
   const low = isLowStock(item);
   return (
     <Card className={low ? "border-primary/40" : ""}>
@@ -409,6 +409,7 @@ function ItemCard({ item }: { item: Item }) {
           <StockDialog item={item} mode="restock" />
           <StockDialog item={item} mode="sell" />
         </div>
+        {canManage && (
         <div className="mt-2 flex gap-2">
           <ItemDialog
             item={item}
@@ -434,6 +435,7 @@ function ItemCard({ item }: { item: Item }) {
             Delete
           </Button>
         </div>
+        )}
       </CardContent>
     </Card>
   );
