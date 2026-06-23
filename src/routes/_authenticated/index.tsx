@@ -110,18 +110,27 @@ function Index() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Select value={currentUser} onValueChange={(v) => actions.setUser(v)}>
-              <SelectTrigger className="h-9 w-[120px] sm:w-[150px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {USERS.map((u) => (
-                  <SelectItem key={u} value={u}>
-                    {u}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="hidden text-right sm:block">
+              <p className="text-sm font-semibold leading-tight">
+                {displayName ?? user?.email ?? "User"}
+              </p>
+              <p className="flex items-center justify-end gap-1 text-[11px] text-muted-foreground">
+                <ShieldCheck className="h-3 w-3" />
+                {isOwner ? "Owner" : "Staff"}
+              </p>
+            </div>
+            <Badge variant={isOwner ? "default" : "secondary"} className="sm:hidden">
+              {isOwner ? "Owner" : "Staff"}
+            </Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="gap-1.5"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Logout</span>
+            </Button>
           </div>
         </div>
       </header>
