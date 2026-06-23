@@ -49,6 +49,8 @@ import {
   type Item,
   type Unit,
 } from "@/lib/inventory-store";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -64,11 +66,22 @@ export const Route = createFileRoute("/_authenticated/")({
   component: Index,
 });
 
-const USERS = ["Suresh", "Staff 1", "Staff 2"];
-
 function Index() {
-  const { items, history, currentUser } = useInventory();
+  const { items, history } = useInventory();
+  const { displayName, role, user } = useAuth();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
+  const isOwner = role === "owner";
+
+  useEffect(() => {
+    if (displayName) actions.setUser(displayName);
+  }, [displayName]);
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    toast.success("Signed out");
+    navigate({ to: "/auth", replace: true });
+  }
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
