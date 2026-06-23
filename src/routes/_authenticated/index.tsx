@@ -255,14 +255,16 @@ function Index() {
                   className="pl-9"
                 />
               </div>
-              <ItemDialog
-                trigger={
-                  <Button className="gap-1.5">
-                    <Plus className="h-4 w-4" />
-                    Add Item
-                  </Button>
-                }
-              />
+              {isOwner && (
+                <ItemDialog
+                  trigger={
+                    <Button className="gap-1.5">
+                      <Plus className="h-4 w-4" />
+                      Add Item
+                    </Button>
+                  }
+                />
+              )}
             </div>
 
             {filtered.length === 0 ? (
@@ -276,7 +278,7 @@ function Index() {
             ) : (
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {filtered.map((item) => (
-                  <ItemCard key={item.id} item={item} />
+                  <ItemCard key={item.id} item={item} canManage={isOwner} />
                 ))}
               </div>
             )}
