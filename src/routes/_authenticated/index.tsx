@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import {
   Package,
   AlertTriangle,
@@ -14,6 +14,8 @@ import {
   Store,
   LayoutDashboard,
   ListChecks,
+  LogOut,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,8 +49,10 @@ import {
   type Item,
   type Unit,
 } from "@/lib/inventory-store";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "Suresh General Store — Inventory" },
@@ -62,11 +66,22 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const USERS = ["Suresh", "Staff 1", "Staff 2"];
-
 function Index() {
-  const { items, history, currentUser } = useInventory();
+  const { items, history } = useInventory();
+  const { displayName, role, user } = useAuth();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
+  const isOwner = role === "owner";
+
+  useEffect(() => {
+    if (displayName) actions.setUser(displayName);
+  }, [displayName]);
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    toast.success("Signed out");
+    navigate({ to: "/auth", replace: true });
+  }
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -95,18 +110,27 @@ function Index() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Select value={currentUser} onValueChange={(v) => actions.setUser(v)}>
-              <SelectTrigger className="h-9 w-[120px] sm:w-[150px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {USERS.map((u) => (
-                  <SelectItem key={u} value={u}>
-                    {u}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="hidden text-right sm:block">
+              <p className="text-sm font-semibold leading-tight">
+                {displayName ?? user?.email ?? "User"}
+              </p>
+              <p className="flex items-center justify-end gap-1 text-[11px] text-muted-foreground">
+                <ShieldCheck className="h-3 w-3" />
+                {isOwner ? "Owner" : "Staff"}
+              </p>
+            </div>
+            <Badge variant={isOwner ? "default" : "secondary"} className="sm:hidden">
+              {isOwner ? "Owner" : "Staff"}
+            </Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="gap-1.5"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Logout</span>
+            </Button>
           </div>
         </div>
       </header>
@@ -231,14 +255,16 @@ function Index() {
                   className="pl-9"
                 />
               </div>
-              <ItemDialog
-                trigger={
-                  <Button className="gap-1.5">
-                    <Plus className="h-4 w-4" />
-                    Add Item
-                  </Button>
-                }
-              />
+              {isOwner && (
+                <ItemDialog
+                  trigger={
+                    <Button className="gap-1.5">
+                      <Plus className="h-4 w-4" />
+                      Add Item
+                    </Button>
+                  }
+                />
+              )}
             </div>
 
             {filtered.length === 0 ? (
@@ -252,7 +278,7 @@ function Index() {
             ) : (
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {filtered.map((item) => (
-                  <ItemCard key={item.id} item={item} />
+                  <ItemCard key={item.id} item={item} canManage={isOwner} />
                 ))}
               </div>
             )}
@@ -352,7 +378,7 @@ function StatCard({
   );
 }
 
-function ItemCard({ item }: { item: Item }) {
+function ItemCard({ item, canManage }: { item: Item; canManage: boolean }) {
   const low = isLowStock(item);
   return (
     <Card className={low ? "border-primary/40" : ""}>
@@ -383,6 +409,7 @@ function ItemCard({ item }: { item: Item }) {
           <StockDialog item={item} mode="restock" />
           <StockDialog item={item} mode="sell" />
         </div>
+        {canManage && (
         <div className="mt-2 flex gap-2">
           <ItemDialog
             item={item}
@@ -408,6 +435,7 @@ function ItemCard({ item }: { item: Item }) {
             Delete
           </Button>
         </div>
+        )}
       </CardContent>
     </Card>
   );
