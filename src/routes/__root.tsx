@@ -79,12 +79,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "author", content: "Suresh General Store" },
       { property: "og:title", content: "Suresh General Store — Inventory" },
-      { property: "og:description", content: "Fast, mobile-friendly inventory management." },
+      { property: "og:description", content: "Inventory management system for general stores. Add, edit and delete items, update stock levels, record sales and restocks, set custom low-stock alerts, search" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
       { title: "Suresh General Store — Inventory" },
-      { name: "description", content: "Fast, mobile-friendly inventory management for Suresh General Store." },
+      { name: "description", content: "Inventory management system for general stores. Add, edit and delete items, update stock levels, record sales and restocks, set custom low-stock alerts, search" },
+      { name: "twitter:title", content: "Suresh General Store — Inventory" },
+      { name: "twitter:description", content: "Inventory management system for general stores. Add, edit and delete items, update stock levels, record sales and restocks, set custom low-stock alerts, search" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4485fe5c-08ba-4c11-8a84-f20458a260f3/id-preview-73b7f696--9545d334-28d6-4f32-a926-29e4ba0524bf.lovable.app-1782193988751.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4485fe5c-08ba-4c11-8a84-f20458a260f3/id-preview-73b7f696--9545d334-28d6-4f32-a926-29e4ba0524bf.lovable.app-1782193988751.png" },
     ],
     links: [
       {
