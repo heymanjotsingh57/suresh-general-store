@@ -77,14 +77,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { name: "author", content: "Suresh General Store" },
+      { property: "og:title", content: "Suresh General Store — Inventory" },
+      { property: "og:description", content: "Fast, mobile-friendly inventory management." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { title: "Suresh General Store — Inventory" },
+      { name: "description", content: "Fast, mobile-friendly inventory management for Suresh General Store." },
     ],
     links: [
       {
