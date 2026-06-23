@@ -85,6 +85,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { title: "Suresh General Store — Inventory" },
+      { name: "description", content: "Fast, mobile-friendly inventory management for Suresh General Store." },
     ],
     links: [
       {
